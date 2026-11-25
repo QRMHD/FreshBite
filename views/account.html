@@ -1,0 +1,20 @@
+<section class="card narrow">
+    <p class="eyebrow">Profile</p><h1>My account</h1>
+    <p class="intro">Signed in as <%= user.name %> · MFA enabled</p>
+    <% if (saved) { %><p role="status" class="success">Display name updated.</p><% } %>
+    <% if (passwordChanged) { %><p role="status" class="success">Password changed. Other sessions were signed out.</p><% } %>
+    <form action="/account" method="post">
+        <input type="hidden" name="csrf" value="<%= csrf %>">
+        <label>Display name<input name="display" value="<%= user.display %>" maxlength="60" required></label>
+        <button type="submit">Save profile</button>
+    </form>
+    <h2>Change password</h2>
+    <form action="/account/password" method="post">
+        <input type="hidden" name="csrf" value="<%= csrf %>">
+        <label>Current password<input type="password" name="currentPassword" maxlength="128" autocomplete="current-password" required></label>
+        <label>New password<input type="password" name="newPassword" minlength="<%= minPasswordLength %>" maxlength="128" autocomplete="new-password" aria-describedby="new-password-rules" required></label>
+        <small id="new-password-rules">Use at least <%= minPasswordLength %> characters, including at least <%= minDistinctPasswordChars %> different characters.</small>
+        <label>Confirm new password<input type="password" name="confirmPassword" minlength="<%= minPasswordLength %>" maxlength="128" autocomplete="new-password" required></label>
+        <button type="submit">Change password</button>
+    </form>
+</section>

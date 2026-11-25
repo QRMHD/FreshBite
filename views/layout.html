@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= title %> | FreshBite</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header><div class="top">
+        <a href="/" class="brand">
+            <img src="/freshbite-logo.jpg" alt="FreshBite home" width="144" height="74">
+        </a>
+        <nav aria-label="Main navigation">
+            <% if (user?.role === 'admin') { %>
+                <a href="/admin">Operations</a><a href="/admin/menu">Manage menu</a><a href="/admin/audit">Audit trail</a>
+            <% } else if (user) { %>
+                <a href="/">Menu</a><a href="/orders">My orders</a><a href="/account">Account</a>
+            <% } else { %>
+                <a href="/">Menu</a><a href="/login">Sign in</a><a href="/register">Create account</a>
+            <% } %>
+            <% if (user) { %>
+                <form action="/logout" method="post" class="nav-form">
+                    <input type="hidden" name="csrf" value="<%= csrf %>">
+                    <button type="submit">Sign out</button>
+                </form>
+            <% } %>
+        </nav>
+    </div></header>
+    <main id="main">
+        <% if (message) { %><div role="alert" class="alert"><%= message %></div><% } %>
+        <%- include(view + '.html') %>
+    </main>
+    <footer><span>FreshBite · Online food ordering</span></footer>
+</body>
+</html>

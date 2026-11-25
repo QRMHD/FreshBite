@@ -1,0 +1,16 @@
+<section class="card narrow">
+    <p class="eyebrow">Step 2 of 2</p>
+    <h1>Verify your sign-in</h1>
+    <p class="intro">Enter the six-digit code from your authenticator.</p>
+    <% if (qr) { %>
+        <p>Scan this QR code in your authenticator. For manual setup, add a time-based entry named FreshBite and enter the key below.</p>
+        <div class="mfa-qr" role="img" aria-label="FreshBite authenticator setup QR code"><%- qr %></div>
+        <code class="secret"><%= setupKey %></code>
+    <% } %>
+    <form action="/mfa" method="post">
+        <input type="hidden" name="csrf" value="<%= csrf %>">
+        <label>Authenticator code<input name="code" required inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label>
+        <button type="submit">Verify code</button>
+    </form>
+    <p><a href="/login">Return to sign in</a></p>
+</section>

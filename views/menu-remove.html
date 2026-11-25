@@ -1,0 +1,10 @@
+<section class="card narrow">
+    <p class="eyebrow">Staff workspace</p>
+    <h1>Remove menu item</h1>
+    <p><strong><%= row.name %></strong> will disappear from the public menu. Past orders will keep the item details.</p>
+    <form action="/admin/menu/<%= row.id %>/remove" method="post">
+        <input type="hidden" name="csrf" value="<%= csrf %>">
+        <button type="submit">Confirm removal</button>
+        <a href="/admin/menu" class="button secondary">Cancel</a>
+    </form>
+</section>

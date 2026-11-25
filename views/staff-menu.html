@@ -1,0 +1,18 @@
+<p class="eyebrow">Staff workspace</p>
+<h1>Manage menu</h1>
+<p class="intro">Add or update menu items. Removing an item hides it from customers and keeps past orders.</p>
+<a href="/admin/menu/new" class="button">Add menu item</a>
+<div class="stack">
+    <% if (!rows.length) { %><p class="empty">The menu is empty.</p><% } %>
+    <% for (const row of rows) { %>
+        <article class="card padded admin-order">
+            <div>
+                <h2><%= row.name %> · <%= rm(row.cents) %></h2>
+                <p><%= row.restaurant %> · <%= row.category %></p>
+                <p><%= row.description %></p>
+                <a href="/admin/menu/<%= row.id %>/edit">Edit <%= row.name %></a>
+            </div>
+            <a class="button secondary" href="/admin/menu/<%= row.id %>/remove" aria-label="Remove <%= row.name %>">Remove</a>
+        </article>
+    <% } %>
+</div>

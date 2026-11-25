@@ -1,0 +1,23 @@
+<section class="card narrow">
+    <p class="eyebrow">Secure access</p>
+    <h1><%= title %></h1>
+    <% if (!register) { %>
+        <p class="intro">Enter your username and password to continue to your authenticator.</p>
+    <% } %>
+    <form action="<%= register ? '/register' : '/login' %>" method="post">
+        <input type="hidden" name="csrf" value="<%= csrf %>">
+        <label>Username<input name="name" required maxlength="24" autocomplete="username"></label>
+        <% if (register) { %><label>Display name<input name="display" required maxlength="60"></label><% } %>
+        <div class="password-field">
+            <label>Password
+                <input type="password" name="password" required maxlength="128"
+                    <% if (register) { %>minlength="<%= minPasswordLength %>" aria-describedby="password-rules"<% } %>
+                    autocomplete="<%= register ? 'new-password' : 'current-password' %>">
+            </label>
+            <% if (register) { %>
+                <small id="password-rules">Use at least <%= minPasswordLength %> characters, including at least <%= minDistinctPasswordChars %> different characters.</small>
+            <% } %>
+        </div>
+        <button type="submit"><%= title %></button>
+    </form>
+</section>

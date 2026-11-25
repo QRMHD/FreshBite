@@ -1,0 +1,19 @@
+<section class="card padded order">
+    <p class="eyebrow">Live order tracking</p>
+    <h1>Order <%= numberLabel(row.id) %></h1>
+    <p class="intro" aria-live="polite"><%= stages[row.status] %></p>
+    <ol class="timeline">
+        <% for (const [index, stage] of stages.entries()) { %>
+            <li class="<%= index <= row.status ? 'done' : '' %>"><span><%= index + 1 %></span><%= stage %></li>
+        <% } %>
+    </ol>
+    <dl>
+        <dt>Item</dt><dd><%= row.item_name %> × <%= row.quantity %></dd>
+        <dt>Delivery address</dt><dd><%= row.address %></dd>
+        <dt>Order notes</dt><dd class="multiline"><%= row.notes || 'None' %></dd>
+        <dt>Total paid in simulator</dt><dd><%= rm(row.cents) %></dd>
+        <dt>Sandbox receipt</dt><dd><%= row.receipt %></dd>
+    </dl>
+    <a href="/orders">All my orders</a>
+</section>
+<script src="/tracking.js" defer></script>

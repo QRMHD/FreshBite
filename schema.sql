@@ -1,0 +1,34 @@
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE, display TEXT NOT NULL,
+    salt BLOB NOT NULL, password BLOB NOT NULL, secret TEXT NOT NULL,
+    role TEXT NOT NULL CHECK(role IN ('customer','admin')),
+    enrolled INTEGER NOT NULL DEFAULT 0, last_step INTEGER NOT NULL DEFAULT -1,
+    failures INTEGER NOT NULL DEFAULT 0, locked_until INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS sessions (
+    digest TEXT PRIMARY KEY, user_id INTEGER REFERENCES users(id),
+    stage TEXT NOT NULL, csrf TEXT NOT NULL, expires INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS menu (
+    id INTEGER PRIMARY KEY, name TEXT NOT NULL, restaurant TEXT NOT NULL,
+    description TEXT NOT NULL, cents INTEGER NOT NULL CHECK(cents > 0), category TEXT NOT NULL,
+    archived INTEGER NOT NULL DEFAULT 0 CHECK(archived IN (0, 1))
+);
+CREATE TABLE IF NOT EXISTS orders (
+    id INTEGER PRIMARY KEY, request_id TEXT NOT NULL UNIQUE,
+    owner INTEGER NOT NULL REFERENCES users(id), item INTEGER NOT NULL REFERENCES menu(id),
+    item_name TEXT,
+    quantity INTEGER NOT NULL CHECK(quantity BETWEEN 1 AND 20),
+    address TEXT NOT NULL, notes TEXT NOT NULL CHECK(length(CAST(notes AS BLOB)) <= 64),
+    cents INTEGER NOT NULL CHECK(cents > 0), receipt TEXT NOT NULL UNIQUE,
+    status INTEGER NOT NULL DEFAULT 0 CHECK(status BETWEEN 0 AND 3), created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS audit (
+    id INTEGER PRIMARY KEY, actor INTEGER NOT NULL REFERENCES users(id),
+    event TEXT NOT NULL, order_id INTEGER REFERENCES orders(id),
+    detail TEXT NOT NULL, created INTEGER NOT NULL
+);
+CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit
+BEGIN SELECT RAISE(ABORT, 'Audit rows are append-only'); END;
+CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit
+BEGIN SELECT RAISE(ABORT, 'Audit rows are append-only'); END;

@@ -1,0 +1,15 @@
+<p class="eyebrow">Customer area</p>
+<h1>My orders</h1>
+<p class="intro">Open an order to see its current delivery status and receipt.</p>
+<% if (!rows.length) { %>
+    <p class="empty">You have no orders yet.</p>
+<% } else { %>
+    <div class="card">
+        <% for (const row of rows) { %>
+            <a class="order-row" href="/orders/<%= row.id %>">
+                <strong><%= numberLabel(row.id) %> · <%= row.item_name %></strong>
+                <span><%= stages[row.status] %></span><span><%= rm(row.cents) %></span>
+            </a>
+        <% } %>
+    </div>
+<% } %>
