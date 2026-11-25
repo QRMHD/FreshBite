@@ -33,7 +33,10 @@ function prepareResponse(req, res, next) {
     res.locals.user = null;
     const port = req.socket.localPort;
     const localHosts = [`127.0.0.1:${port}`, `localhost:${port}`];
-    if (!localHosts.includes(req.headers.host) || req.originalUrl.length > 600) {
+    const validHost = process.env.VERCEL
+        ? typeof req.headers.host === 'string' && req.headers.host.length > 0 && !/\s/.test(req.headers.host)
+        : localHosts.includes(req.headers.host);
+    if (!validHost || req.originalUrl.length > 600) {
         throw new Problem('Open the app using its local address.', 400);
     }
     next();

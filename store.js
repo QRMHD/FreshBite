@@ -1,12 +1,13 @@
 import { randomBytes } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { Problem, isTotpSeed, newTotpSecret, openSeed, passwordHash, sealSeed, tokenDigest } from './security.js';
 
 export const dataFolder = process.env.FRESHBITE_DATA ||
-    fileURLToPath(new URL('./data', import.meta.url));
+    (process.env.VERCEL ? join(tmpdir(), 'freshbite-data') : fileURLToPath(new URL('./data', import.meta.url)));
 export function nowSeconds() {
     return Math.floor(Date.now() / 1000);
 }
